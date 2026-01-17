@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import sys
 
 def topsis(input_file_name, weights, impacts, result_file_name):
     if any(arg is None for arg in [input_file_name, weights, impacts, result_file_name]):
@@ -84,4 +85,17 @@ def topsis(input_file_name, weights, impacts, result_file_name):
     except Exception as e:
         print(f"Error writing result file: {e}")
 
-topsis("data.csv", "1,2,1,4,3", "-,+,-,-,+", "result.csv")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 5:
+        print("Usage:")
+        print("python topsis.py <InputDataFile> <Weights> <Impacts> <OutputResultFileName>")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+    weights = sys.argv[2]
+    impacts = sys.argv[3]
+    output_file = sys.argv[4]
+
+    topsis(input_file, weights, impacts, output_file)
