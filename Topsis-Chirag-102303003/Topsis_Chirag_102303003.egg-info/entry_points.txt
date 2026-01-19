@@ -1,0 +1,2 @@
+[console_scripts]
+topsis = topsis_chirag_102303003.cli:main

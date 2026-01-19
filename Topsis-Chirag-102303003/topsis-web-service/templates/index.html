@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TOPSIS Web Service</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Part-III</h1>
+    <h2>Develop a web service for TOPSIS</h2>
+
+    <div class="card">
+      <form id="topsisForm">
+        <div class="row">
+          <label>File Name</label>
+          <input type="file" id="file" name="file" accept=".csv" required />
+        </div>
+
+        <div class="row">
+          <label>Weights</label>
+          <input type="text" id="weights" name="weights" placeholder="1,1,1,1" required />
+        </div>
+
+        <div class="row">
+          <label>Impacts</label>
+          <input type="text" id="impacts" name="impacts" placeholder="+,+,-,+" required />
+        </div>
+
+        <div class="row">
+          <label>Email Id</label>
+          <input type="email" id="email" name="email" placeholder="example@gmail.com" required />
+        </div>
+
+        <button class="btn" type="submit">Submit</button>
+      </form>
+
+      <p id="msg" class="msg"></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("topsisForm");
+    const msg = document.getElementById("msg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.className = "msg";
+      msg.innerText = "Uploading & Processing... Please wait ✅";
+
+      const fileInput = document.getElementById("file");
+      const weights = document.getElementById("weights").value.trim();
+      const impacts = document.getElementById("impacts").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      // quick frontend validation
+      if (!weights.includes(",") || !impacts.includes(",")) {
+        msg.className = "msg error";
+        msg.innerText = "❌ Weights and Impacts must be comma separated.";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+      formData.append("weights", weights);
+      formData.append("impacts", impacts);
+      formData.append("email", email);
+
+      try {
+        const res = await fetch("/topsis", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          msg.className = "msg error";
+          msg.innerText = "❌ " + (data.detail || "Something went wrong");
+          return;
+        }
+
+        msg.className = "msg success";
+        msg.innerText = "✅ Success! Result CSV sent to your email.";
+        form.reset();
+
+      } catch (err) {
+        msg.className = "msg error";
+        msg.innerText = "❌ Server not reachable. Is FastAPI running?";
+      }
+    });
+  </script>
+</body>
+</html>

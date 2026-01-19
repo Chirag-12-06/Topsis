@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Topsis-Chirag-102303003"
+version = "1.0.0"
+description = "TOPSIS implementation command line package"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+  { name = "Chirag Gupta" }
+]
+dependencies = [
+  "pandas",
+  "numpy"
+]
+
+[project.scripts]
+topsis = "topsis_chirag_102303003.cli:main"
